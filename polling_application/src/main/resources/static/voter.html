@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Model Polling - Voter</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #3498db;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --border-radius: 6px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Playfair Display', 'Garamond', serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            border-bottom: 5px solid var(--accent);
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            font-size: 2.6em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+            position: relative;
+            display: inline-block;
+        }
+
+        h1::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 25%;
+            width: 50%;
+            height: 3px;
+            background: var(--accent);
+        }
+
+        h2 {
+            font-size: 1.8em;
+            color: var(--primary);
+            margin: 40px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent);
+            letter-spacing: 0.5px;
+        }
+
+        h3 {
+            font-size: 1.4em;
+            color: var(--secondary);
+            margin: 25px 0 15px;
+            font-weight: 600;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: var(--transition);
+            border-left: 4px solid var(--accent);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        label {
+            display: block;
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--secondary);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 14px 16px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1em;
+            transition: var(--transition);
+            font-family: 'Libre Baskerville', serif;
+            background-color: #f9f9f9;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.25);
+            outline: none;
+            background-color: white;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 12px 28px;
+            font-size: 1.05em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            letter-spacing: 0.5px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        button:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        button.primary {
+            background: var(--primary);
+        }
+
+        button.secondary {
+            background: var(--secondary);
+        }
+
+        button.accent {
+            background: var(--accent);
+        }
+
+        button.danger {
+            background: var(--danger);
+        }
+
+        button.success {
+            background: var(--success);
+        }
+
+        button.warning {
+            background: var(--warning);
+        }
+
+        button.btn-block {
+            width: 100%;
+            margin: 15px 0;
+            justify-content: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 25px 0;
+            box-shadow: var(--shadow);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        thead {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        th, td {
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            font-size: 1.05em;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f4f7;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .panel-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        footer {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 50px;
+            font-size: 0.9em;
+            border-top: 5px solid var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+                margin: 20px auto;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .button-container {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            th, td {
+                padding: 12px 15px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>AI Model Polling</h1>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2><i class="fas fa-vote-yea"></i> Cast Your Vote</h2>
+        
+        <div class="card">
+            <div class="panel-header">
+                <h3><i class="fas fa-robot"></i> Candidate Models</h3>
+                <div class="panel-actions">
+                    <button id="listModelsButton" class="secondary">
+                        <i class="fas fa-list"></i> View Models
+                    </button>
+                </div>
+            </div>
+            
+            <table id="modelsTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Model ID</th>
+                        <th>Name</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <div class="panel-header">
+                <h3><i class="fas fa-ballot"></i> Voting Form</h3>
+            </div>
+            
+            <form id="voteForm">
+                <label for="voterId">Voter ID:</label>
+                <input type="text" id="voterId" name="voterId" placeholder="Enter your unique voter ID" required>
+                
+                <label for="voterName">Voter Name:</label>
+                <input type="text" id="voterName" name="voterName" placeholder="Enter your full name" required>
+                
+                <label for="interests">Interests (comma-separated):</label>
+                <input type="text" id="interests" name="interests" placeholder="Enter your interests">
+                
+                <label for="modelId">Model ID:</label>
+                <input type="text" id="modelId" name="modelId" placeholder="Enter the model ID you wish to vote for" required>
+                
+                <div class="button-container">
+                    <button type="submit" id="voteButton" class="success">
+                        <i class="fas fa-check-circle"></i> Cast Vote
+                    </button>
+                    <button type="button" id="retractVoteButton" class="danger">
+                        <i class="fas fa-times-circle"></i> Retract Vote
+                    </button>
+                    <button type="button" id="getVotedModelButton" class="accent">
+                        <i class="fas fa-search"></i> View My Vote
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const apiUrl = 'http://localhost:8080/api';
+        let modelsVisible = false;
+
+        function loadModels() {
+            const modelsTableBody = document.querySelector('#modelsTable tbody');
+            modelsTableBody.innerHTML = ''; 
+
+            fetch(apiUrl + '/votes/models')
+                .then(response => response.json())
+                .then(models => {
+                    if (models.length === 0) {
+                        modelsTableBody.innerHTML = `
+                            <tr>
+                                <td colspan="3" style="text-align: center; padding: 30px;">
+                                    <i class="fas fa-info-circle" style="font-size: 2em; color: #95a5a6; display: block; margin-bottom: 10px;"></i>
+                                    No models available. Please check back later.
+                                </td>
+                            </tr>
+                        `;
+                    } else {
+                        models.forEach(model => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${model.modelId}</td>
+                                <td>${model.name}</td>
+                                <td>${model.purpose}</td>
+                            `;
+                            modelsTableBody.appendChild(row);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading models:', error);
+                    modelsTableBody.innerHTML = `
+                        <tr>
+                            <td colspan="3" style="text-align: center; padding: 30px; color: #e74c3c;">
+                                <i class="fas fa-exclamation-triangle" style="font-size: 2em; display: block; margin-bottom: 10px;"></i>
+                                Error loading models: ${error.message}
+                            </td>
+                        </tr>
+                    `;
+                });
+        }
+
+        document.getElementById('listModelsButton').addEventListener('click', function() {
+            const modelsTable = document.getElementById('modelsTable');
+            modelsVisible = !modelsVisible;
+            
+            if (modelsVisible) {
+                loadModels();
+                modelsTable.style.display = 'table';
+                this.innerHTML = '<i class="fas fa-times"></i> Hide Models';
+            } else {
+                modelsTable.style.display = 'none';
+                this.innerHTML = '<i class="fas fa-list"></i> View Models';
+            }
+        });
+
+        document.getElementById('voteForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            loadModels();
+            
+            const voterId = document.getElementById('voterId').value;
+            const voterName = document.getElementById('voterName').value;
+            const interests = document.getElementById('interests').value.split(',').map(item => item.trim());
+            const modelId = document.getElementById('modelId').value;
+            
+            const voteButton = document.getElementById('voteButton');
+            voteButton.disabled = true;
+            voteButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+
+            fetch(apiUrl + '/votes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    voterId: voterId,
+                    voterName: voterName,
+                    interests: interests,
+                    modelId: modelId
+                })
+            })
+            .then(response => {
+                voteButton.disabled = false;
+                voteButton.innerHTML = '<i class="fas fa-check-circle"></i> Cast Vote';
+                
+                if (!response.ok) {
+                    return response.text().then(text => { throw new Error(text) });
+                }
+                
+                const notification = document.createElement('div');
+                notification.style.position = 'fixed';
+                notification.style.top = '20px';
+                notification.style.right = '20px';
+                notification.style.backgroundColor = '#27ae60';
+                notification.style.color = 'white';
+                notification.style.padding = '15px 25px';
+                notification.style.borderRadius = '4px';
+                notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+                notification.style.zIndex = '1000';
+                notification.style.transition = 'all 0.3s ease';
+                notification.innerHTML = '<strong>Success!</strong> Your vote has been recorded.';
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 3000);
+            })
+            .catch(error => {
+                voteButton.disabled = false;
+                voteButton.innerHTML = '<i class="fas fa-check-circle"></i> Cast Vote';
+                
+                const notification = document.createElement('div');
+                notification.style.position = 'fixed';
+                notification.style.top = '20px';
+                notification.style.right = '20px';
+                notification.style.backgroundColor = '#e74c3c';
+                notification.style.color = 'white';
+                notification.style.padding = '15px 25px';
+                notification.style.borderRadius = '4px';
+                notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+                notification.style.zIndex = '1000';
+                notification.style.transition = 'all 0.3s ease';
+                notification.innerHTML = '<strong>Error!</strong> ' + error.message;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 3000);
+            });
+        });
+
+        document.getElementById('retractVoteButton').addEventListener('click', function() {
+            loadModels();
+        
+            const voterId = document.getElementById('voterId').value;
+            if (!voterId) {
+                const notification = document.createElement('div');
+                notification.style.position = 'fixed';
+                notification.style.top = '20px';
+                notification.style.right = '20px';
+                notification.style.backgroundColor = '#f39c12';
+                notification.style.color = 'white';
+                notification.style.padding = '15px 25px';
+                notification.style.borderRadius = '4px';
+                notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+                notification.style.zIndex = '1000';
+                notification.innerHTML = '<strong>Warning!</strong> Please enter your Voter ID.';
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 3000);
+                return;
+            }
+            
+            if (!confirm(`Are you sure you want to retract your vote? This action cannot be undone.`)) {
+                return;
+            }
+            
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Retracting...';
+            
+            fetch(`${apiUrl}/votes/${voterId}`, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                this.disabled = false;
+                this.innerHTML = '<i class="fas fa-times-circle"></i> Retract Vote';
+                
+                if (!response.ok) {
+                    return response.text().then(text => { throw new Error(text) });
+                }
+                
+                const notification = document.createElement('div');
+                notification.style.position = 'fixed';
+                notification.style.top = '20px';
+                notification.style.right = '20px';
+                notification.style.backgroundColor = '#27ae60';
+                notification.style.color = 'white';
+                notification.style.padding = '15px 25px';
+                notification.style.borderRadius = '4px';
+                notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+                notification.style.zIndex = '1000';
+                notification.innerHTML = '<strong>Success!</strong> Your vote has been retracted.';
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 3000);
+            })
+            .catch(error => {
+                this.disabled = false;
+                this.innerHTML = '<i class="fas fa-times-circle"></i> Retract Vote';
+                
+                const notification = document.createElement('div');
+                notification.style.position = 'fixed';
+                notification.style.top = '20px';
+                notification.style.right = '20px';
+                notification.style.backgroundColor = '#e74c3c';
+                notification.style.color = 'white';
+                notification.style.padding = '15px 25px';
+                notification.style.borderRadius = '4px';
+                notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+                notification.style.zIndex = '1000';
+                notification.innerHTML = '<strong>Error!</strong> ' + error.message;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 3000);
+            });
+        });
+
+        document.getElementById('getVotedModelButton').addEventListener('click', function() {
+            loadModels();
+        
+            const voterId = document.getElementById('voterId').value;
+            if (!voterId) {
+                const notification = document.createElement('div');
+                notification.style.position = 'fixed';
+                notification.style.top = '20px';
+                notification.style.right = '20px';
+                notification.style.backgroundColor = '#f39c12';
+                notification.style.color = 'white';
+                notification.style.padding = '15px 25px';
+                notification.style.borderRadius = '4px';
+                notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+                notification.style.zIndex = '1000';
+                notification.innerHTML = '<strong>Warning!</strong> Please enter your Voter ID.';
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 3000);
+                return;
+            }
+            
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+            
+            fetch(`${apiUrl}/votes/model/${voterId}`, {
+                method: 'GET'
+            })
+            .then(response => {
+                this.disabled = false;
+                this.innerHTML = '<i class="fas fa-search"></i> View My Vote';
+                
+                if (!response.ok) {
+                    return response.text().then(text => { throw new Error(text) });
+                }
+                return response.text();
+            })
+            .then(modelId => {
+                const notification = document.createElement('div');
+                notification.style.position = 'fixed';
+                notification.style.top = '20px';
+                notification.style.right = '20px';
+                notification.style.backgroundColor = '#3498db';
+                notification.style.color = 'white';
+                notification.style.padding = '15px 25px';
+                notification.style.borderRadius = '4px';
+                notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+                notification.style.zIndex = '1000';
+                
+                if (modelId) {
+                    notification.innerHTML = `You voted for model ID: ${modelId}`;
+                } else {
+                    notification.innerHTML = 'You have not voted yet.';
+                }
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 3000);
+            })
+            .catch(error => {
+                this.disabled = false;
+                this.innerHTML = '<i class="fas fa-search"></i> View My Vote';
+                
+                const notification = document.createElement('div');
+                notification.style.position = 'fixed';
+                notification.style.top = '20px';
+                notification.style.right = '20px';
+                notification.style.backgroundColor = '#e74c3c';
+                notification.style.color = 'white';
+                notification.style.padding = '15px 25px';
+                notification.style.borderRadius = '4px';
+                notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+                notification.style.zIndex = '1000';
+                notification.innerHTML = '<strong>Error!</strong> ' + error.message;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 3000);
+            });
+        });
+    </script>
+</body>
+</html>

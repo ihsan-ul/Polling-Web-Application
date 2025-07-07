@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Model Polling - Administration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #3498db;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --border-radius: 6px;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Playfair Display', 'Garamond', serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            border-bottom: 5px solid var(--accent);
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            font-size: 2.6em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+            position: relative;
+            display: inline-block;
+        }
+
+        h1::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 25%;
+            width: 50%;
+            height: 3px;
+            background: var(--accent);
+        }
+
+        h2 {
+            font-size: 1.8em;
+            color: var(--primary);
+            margin: 40px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent);
+            letter-spacing: 0.5px;
+        }
+
+        h3 {
+            font-size: 1.4em;
+            color: var(--secondary);
+            margin: 25px 0 15px;
+            font-weight: 600;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: var(--transition);
+            border-left: 4px solid var(--accent);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        label {
+            display: block;
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--secondary);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 14px 16px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1em;
+            transition: var(--transition);
+            font-family: 'Libre Baskerville', serif;
+            background-color: #f9f9f9;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.25);
+            outline: none;
+            background-color: white;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 12px 28px;
+            font-size: 1.05em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            letter-spacing: 0.5px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        button:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        button.primary {
+            background: var(--primary);
+        }
+
+        button.secondary {
+            background: var(--secondary);
+        }
+
+        button.accent {
+            background: var(--accent);
+        }
+
+        button.danger {
+            background: var(--danger);
+        }
+
+        button.success {
+            background: var(--success);
+        }
+
+        button.warning {
+            background: var(--warning);
+        }
+
+        button.btn-block {
+            width: 100%;
+            margin: 15px 0;
+            justify-content: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 25px 0;
+            box-shadow: var(--shadow);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        thead {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        th, td {
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            font-size: 1.05em;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f4f7;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-open {
+            background-color: var(--success);
+        }
+
+        .status-closed {
+            background-color: var(--danger);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .panel-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .badge-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .badge-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .badge-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .badge-warning {
+            background-color: var(--warning);
+            color: white;
+        }
+
+        footer {
+            background: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 50px;
+            font-size: 0.9em;
+            border-top: 5px solid var(--accent);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+                margin: 20px auto;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .button-container {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            th, td {
+                padding: 12px 15px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>AI Model Polling Administration</h1>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2><i class="fas fa-cogs"></i> Administration Dashboard</h2>
+
+        <div class="card">
+            <div class="panel-header">
+                <h3><i class="fas fa-vote-yea"></i> Poll Status</h3>
+                <div>
+                    <span id="pollStatusIndicator"></span>
+                </div>
+            </div>
+            <button id="togglePollButton" class="btn-block">Loading Status...</button>
+        </div>
+
+        <div class="card">
+            <div class="panel-header">
+                <h3><i class="fas fa-robot"></i> Candidate Models</h3>
+                <div class="panel-actions">
+                    <button id="listModelsButton" class="secondary">
+                        <i class="fas fa-list"></i> View Models
+                    </button>
+                </div>
+            </div>
+            
+            <table id="modelsTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Model ID</th>
+                        <th>Name</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
+            <h3><i class="fas fa-plus-circle"></i> Add/Remove Model</h3>
+            <div>
+                <label for="modelId">Model ID:</label>
+                <input type="text" id="modelId" name="modelId" placeholder="Enter unique model identifier" required>
+                
+                <label for="name">Model Name:</label>
+                <input type="text" id="name" name="name" placeholder="Enter model name" required>
+                
+                <label for="purpose">Purpose:</label>
+                <input type="text" id="purpose" name="purpose" placeholder="Enter model purpose" required>
+                
+                <div class="button-container">
+                    <button id="addModelButton" class="success">
+                        <i class="fas fa-plus"></i> Add Model
+                    </button>
+                    <button id="deleteModelButton" class="danger">
+                        <i class="fas fa-trash"></i> Delete Model
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="panel-header">
+                <h3><i class="fas fa-chart-bar"></i> Voting Results</h3>
+                <div class="panel-actions">
+                    <button id="validateVoters" class="warning">
+                        <i class="fas fa-user-check"></i> Validate Voters
+                    </button>
+                    <button id="getTally" class="accent">
+                        <i class="fas fa-poll"></i> Show Tally
+                    </button>
+                </div>
+            </div>
+            
+            <table id="tallyTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Model ID</th>
+                        <th>Model Name</th>
+                        <th>Total Votes</th>
+                        <th>Most Common Interest</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        const apiUrl = 'http://localhost:8080/api';
+        let modelsVisible = false;
+        let tallyVisible = false;
+        let pollIsOpen = false;
+
+        function authenticatedFetch(url, options) {
+            const authHeader = 'Basic ' + btoa('admin:password');
+            options = options || {};
+            const headers = options.headers || {};
+            headers['Authorization'] = authHeader;
+            options.headers = headers;
+            return fetch(url, options);
+        }
+
+        function fetchPollStatus() {
+            return authenticatedFetch(apiUrl + '/admin/poll-status')
+                .then(response => response.json())
+                .then(data => {
+					pollIsOpen = !!data;
+                    updatePollUI();
+                })
+                .catch(() => {
+                    pollIsOpen = false;
+                    updatePollUI();
+                });
+        }
+
+        function updatePollUI() {
+            const btn = document.getElementById('togglePollButton');
+            const indicator = document.getElementById('pollStatusIndicator');
+            
+            if (pollIsOpen) {
+                btn.textContent = 'Close Poll';
+                btn.className = 'btn-block danger';
+                btn.innerHTML = '<i class="fas fa-lock"></i> Close Poll';
+                indicator.innerHTML = '<span class="status-indicator status-open"></span><span class="badge badge-success">OPEN</span>';
+            } else {
+                btn.textContent = 'Open Poll';
+                btn.className = 'btn-block success';
+                btn.innerHTML = '<i class="fas fa-lock-open"></i> Open Poll';
+                indicator.innerHTML = '<span class="status-indicator status-closed"></span><span class="badge badge-danger">CLOSED</span>';
+            }
+        }
+
+        function setPollStatus(open) {
+            authenticatedFetch(apiUrl + '/admin/poll-status?open=' + open, {
+                method: 'PUT'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => { throw new Error(text) });
+                }
+                
+                const status = open ? 'Open' : 'Closed';
+                const notification = document.createElement('div');
+                notification.style.position = 'fixed';
+                notification.style.top = '20px';
+                notification.style.right = '20px';
+                notification.style.backgroundColor = open ? '#27ae60' : '#e74c3c';
+                notification.style.color = 'white';
+                notification.style.padding = '15px 25px';
+                notification.style.borderRadius = '4px';
+                notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+                notification.style.zIndex = '1000';
+                notification.style.transition = 'all 0.3s ease';
+                notification.innerHTML = `<strong>Success!</strong> Poll status updated to ${status}`;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 3000);
+                
+                pollIsOpen = open;
+                updatePollUI();
+                
+                if (open && tallyVisible) {
+                    tallyVisible = false;
+                    document.getElementById('tallyTable').style.display = 'none';
+                    document.getElementById('getTally').innerHTML = '<i class="fas fa-poll"></i> Show Tally';
+                }
+            })
+            .catch(error => {
+                alert('Error setting poll status: ' + error.message);
+            });
+        }
+
+        document.getElementById('togglePollButton').addEventListener('click', function() {
+            setPollStatus(!pollIsOpen);
+        });
+
+        function loadTally() {
+            fetch(apiUrl + '/admin/tally', {
+                headers: { 'Authorization': 'Basic ' + btoa('admin:password') }
+            })
+            .then(response => {
+                if (!response.ok) return response.text().then(text => { throw new Error(text) });
+                return response.json();
+            })
+            .then(tally => {
+                const tbody = document.querySelector('#tallyTable tbody');
+                tbody.innerHTML = '';
+                
+                for (const modelId in tally) {
+                    if (Object.hasOwnProperty.call(tally, modelId)) {
+                        const stats = tally[modelId];
+                        const row = `
+                            <tr>
+                                <td>${modelId}</td>
+                                <td>${stats.modelName}</td>
+                                <td>${stats.totalVotes}</td>
+                                <td>${stats.mostCommonInterest}</td>
+                            </tr>
+                        `;
+                        tbody.innerHTML += row;
+                    }
+                }
+                
+                document.getElementById('tallyTable').style.display = 'table';
+                document.getElementById('getTally').innerHTML = '<i class="fas fa-times"></i> Hide Tally';
+            })
+            .catch(error => {
+                alert(error.message);
+                document.getElementById('tallyTable').style.display = 'none';
+                tallyVisible = false;
+                document.getElementById('getTally').innerHTML = '<i class="fas fa-poll"></i> Show Tally';
+            });
+        }
+
+        document.getElementById('addModelButton').addEventListener('click', function() {
+            const modelId = document.getElementById('modelId').value.trim();
+            const name = document.getElementById('name').value.trim();
+            const purpose = document.getElementById('purpose').value.trim();
+            
+            if (!modelId || !name || !purpose) {
+                alert('Please fill in all fields.');
+                return;
+            }
+            
+            authenticatedFetch(apiUrl + '/admin/model', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ modelId, name, purpose })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => { throw new Error(text) });
+                }
+                return response.json();
+            })
+            .then(() => {
+                alert('Model added successfully!');
+                document.getElementById('modelId').value = '';
+                document.getElementById('name').value = '';
+                document.getElementById('purpose').value = '';
+                
+                if (modelsVisible) loadModels();
+                if (tallyVisible) loadTally();
+            })
+            .catch(error => {
+                if (error.message.includes("Model ID already exists")) {
+                    alert('Model with this ID already exists.');
+                } else {
+                    alert('Error adding model: ' + error.message);
+                }
+            });
+        });
+
+        document.getElementById('deleteModelButton').addEventListener('click', function() {
+            const modelId = document.getElementById('modelId').value.trim();
+            
+            if (!modelId) {
+                alert('Please enter a Model ID to delete.');
+                return;
+            }
+            
+            if (!confirm(`Are you sure you want to delete model '${modelId}'? This action cannot be undone.`)) {
+                return;
+            }
+            
+            authenticatedFetch(apiUrl + '/admin/model/' + encodeURIComponent(modelId), {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (response.status === 404) {
+                    return response.text().then(text => { throw new Error(text); });
+                } else if (!response.ok) {
+                    return response.text().then(text => { throw new Error(text); });
+                }
+                
+                alert('Model deleted successfully!');
+                document.getElementById('modelId').value = '';
+                
+                if (modelsVisible) loadModels();
+                if (tallyVisible) loadTally();
+            })
+            .catch(error => {
+                if (error.message.includes("does not exist")) {
+                    alert('Error: Model with this ID does not exist.');
+                } else {
+                    alert('Error deleting model: ' + error.message);
+                }
+            });
+        });
+
+        function loadModels() {
+            const modelsTableBody = document.querySelector('#modelsTable tbody');
+            modelsTableBody.innerHTML = '';
+            
+            authenticatedFetch(apiUrl + '/votes/models')
+                .then(response => response.json())
+                .then(models => {
+                    if (models.length === 0) {
+                        modelsTableBody.innerHTML = `
+                            <tr>
+                                <td colspan="3" style="text-align: center; padding: 30px;">
+                                    <i class="fas fa-info-circle" style="font-size: 2em; color: #95a5a6; display: block; margin-bottom: 10px;"></i>
+                                    No models available. Add your first model using the form below.
+                                </td>
+                            </tr>
+                        `;
+                    } else {
+                        models.forEach(model => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${model.modelId}</td>
+                                <td>${model.name}</td>
+                                <td>${model.purpose}</td>
+                            `;
+                            modelsTableBody.appendChild(row);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading models:', error);
+                    modelsTableBody.innerHTML = `
+                        <tr>
+                            <td colspan="3" style="text-align: center; padding: 30px; color: #e74c3c;">
+                                <i class="fas fa-exclamation-triangle" style="font-size: 2em; display: block; margin-bottom: 10px;"></i>
+                                Error loading models: ${error.message}
+                            </td>
+                        </tr>
+                    `;
+                });
+        }
+
+        document.getElementById('listModelsButton').addEventListener('click', function() {
+            const modelsTable = document.getElementById('modelsTable');
+            modelsVisible = !modelsVisible;
+            
+            if (modelsVisible) {
+                loadModels();
+                modelsTable.style.display = 'table';
+                this.innerHTML = '<i class="fas fa-times"></i> Hide Models';
+            } else {
+                modelsTable.style.display = 'none';
+                this.innerHTML = '<i class="fas fa-list"></i> View Models';
+            }
+        });
+
+        document.getElementById('getTally').addEventListener('click', function() {
+            tallyVisible = !tallyVisible;
+            
+            if (tallyVisible) {
+                loadTally();
+            } else {
+                document.getElementById('tallyTable').style.display = 'none';
+                this.innerHTML = '<i class="fas fa-poll"></i> Show Tally';
+            }
+        });
+
+        document.getElementById('validateVoters').addEventListener('click', function() {
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Validating...';
+            
+            authenticatedFetch(apiUrl + '/admin/validate', {
+                method: 'POST'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => { throw new Error(text) });
+                }
+                return response.text();
+            })
+            .then(message => {
+                alert(message);
+                this.disabled = false;
+                this.innerHTML = '<i class="fas fa-user-check"></i> Validate Voters';
+                
+                if (tallyVisible) loadTally();
+            })
+            .catch(error => {
+                alert('Error validating voters: ' + error.message);
+                this.disabled = false;
+                this.innerHTML = '<i class="fas fa-user-check"></i> Validate Voters';
+            });
+        });
+
+        fetchPollStatus();
+    </script>
+</body>
+</html>
