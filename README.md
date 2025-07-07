@@ -1,4 +1,4 @@
-Polling Web Application
+Polling Web Application:
 This project is a fully functional web-based polling (voting) system built with Java Spring Boot and Maven.It demonstrates the design and development of a modern web service combining a RESTful backend with an interactive vanilla JavaScript frontend.
 
 Features:
