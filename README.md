@@ -19,17 +19,17 @@ Maven build system:
 - Simplifies dependency management and deployment.
 
 Technologies Used:
-Java 17+
-Spring Boot
-Spring Security
-Spring Data JPA
-Embedded Database
-Maven
-HTML,CSS, & Vanilla JavaScript
+- Java 17+
+- Spring Boot
+- Spring Security
+- Spring Data JPA
+- Embedded Database
+- Maven
+- HTML,CSS, & Vanilla JavaScript
 
 Purpose & learning outcomes:
 This project showcases how to build a secure, data-driven web service, applying best practices in:
-Backend architecture (controllers, services, repositories).
-Security configuration and access control.
-Integrating frontend views with backend services.
-Deploying a complete Java web application using Maven.
+- Backend architecture (controllers, services, repositories).
+- Security configuration and access control.
+- Integrating frontend views with backend services.
+- Deploying a complete Java web application using Maven.
